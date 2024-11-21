@@ -12,14 +12,19 @@ class VehicleListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Lista de Vehículos')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final newVehicle = await Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (_) => AddVehicleScreen(controller: _controller)),
+              builder: (context) => AddVehicleScreen(controller: _controller),
+            ),
           );
+
+          if (newVehicle != null) {
+            _controller.addVehicle(newVehicle);
+          }
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
       body: ValueListenableBuilder<List<Vehicle>>(
         valueListenable: _controller.vehicles,
@@ -27,7 +32,6 @@ class VehicleListScreen extends StatelessWidget {
           return VehicleListBody(
             vehicles: vehicles,
             onVehicleSelected: (vehicle) {
-              // Acción al seleccionar un vehículo
               print("Vehículo seleccionado: ${vehicle.plate}");
             },
           );
