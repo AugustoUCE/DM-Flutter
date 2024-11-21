@@ -32,4 +32,8 @@ class VehicleController {
   void addVehicle(Vehicle vehicle) {
     vehicles.value = [...vehicles.value, vehicle];
   }
+
+  List<Vehicle> getVehicles() {
+    return vehicles.value;
+  }
 }

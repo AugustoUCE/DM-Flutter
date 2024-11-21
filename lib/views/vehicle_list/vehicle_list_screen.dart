@@ -4,12 +4,7 @@ import 'package:flutter_app/views/vehicle_list/widgets/vehicle_list_body.dart';
 import '../../controllers/vehicle_controller.dart';
 import '../add_vehicle_screen.dart';
 
-class VehicleListScreen extends StatefulWidget {
-  @override
-  _VehicleListScreenState createState() => _VehicleListScreenState();
-}
-
-class _VehicleListScreenState extends State<VehicleListScreen> {
+class VehicleListScreen extends StatelessWidget {
   final VehicleController _controller = VehicleController();
 
   @override
@@ -20,16 +15,22 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => AddVehicleScreen()),
-          ).then((_) => setState(() {}));
+            MaterialPageRoute(
+                builder: (_) => AddVehicleScreen(controller: _controller)),
+          );
         },
         child: const Icon(Icons.add),
       ),
-      body: VehicleListBody(
-        vehicles: _controller.vehicles,
-        onVehicleSelected: (vehicle) {
-          // Acción al seleccionar un vehículo (ej. ver detalles)
-          print("Vehículo seleccionado: ${vehicle.plate}");
+      body: ValueListenableBuilder<List<Vehicle>>(
+        valueListenable: _controller.vehicles,
+        builder: (context, vehicles, _) {
+          return VehicleListBody(
+            vehicles: vehicles,
+            onVehicleSelected: (vehicle) {
+              // Acción al seleccionar un vehículo
+              print("Vehículo seleccionado: ${vehicle.plate}");
+            },
+          );
         },
       ),
     );
