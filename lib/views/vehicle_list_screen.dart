@@ -1,35 +1,42 @@
 import 'package:flutter/material.dart';
 import '../controllers/vehicle_controller.dart';
+import '../models/vehicle.dart';
 import 'add_vehicle_screen.dart';
 
-class VehicleListScreen extends StatefulWidget {
-  @override
-  _VehicleListScreenState createState() => _VehicleListScreenState();
-}
-
-class _VehicleListScreenState extends State<VehicleListScreen> {
+class VehicleListScreen extends StatelessWidget {
   final VehicleController _controller = VehicleController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Lista de Vehículos')),
-      body: ListView.builder(
-        itemCount: _controller.vehicles.length,
-        itemBuilder: (context, index) {
-          final vehicle = _controller.vehicles[index];
-          return ListTile(
-            title: Text(vehicle.plate),
-            subtitle: Text('${vehicle.brand} - ${vehicle.color}'),
+      body: ValueListenableBuilder<List<Vehicle>>(
+        valueListenable: _controller.vehicles,
+        builder: (context, vehicles, _) {
+          return ListView.builder(
+            itemCount: vehicles.length,
+            itemBuilder: (context, index) {
+              final vehicle = vehicles[index];
+              return ListTile(
+                title: Text('${vehicle.brand} - ${vehicle.plate}'),
+                subtitle: Text('Costo: \$${vehicle.cost} - Activo: ${vehicle.isActive ? "Sí" : "No"}'),
+              );
+            },
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final newVehicle = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => AddVehicleScreen()),
-          ).then((_) => setState(() {}));
+            MaterialPageRoute(
+              builder: (context) => AddVehicleScreen(controller: _controller),
+            ),
+          );
+
+          if (newVehicle != null) {
+            _controller.addVehicle(newVehicle);
+          }
         },
         child: Icon(Icons.add),
       ),

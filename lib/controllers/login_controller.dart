@@ -2,8 +2,10 @@ import '../models/user.dart';
 
 class LoginController {
   final List<User> users = [
-    User(firstName: 'John', lastName: 'Doe'),
-    User(firstName: 'Jane', lastName: 'Smith'),
+    User(firstName: 'Emil', lastName: 'Verkade'),
+    User(firstName: 'Kevin', lastName: 'Andrade'),
+    User(firstName: 'Jhon', lastName: 'Arteaga'),
+    User(firstName: 'Augusto', lastName: 'Salazar'),
   ];
 
   bool authenticate(String firstName, String lastName) {
