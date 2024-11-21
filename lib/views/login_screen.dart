@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../controllers/login_controller.dart';
-import 'vehicle_list_screen.dart';
+import 'vehicle_list/vehicle_list_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   final LoginController _controller = LoginController();
