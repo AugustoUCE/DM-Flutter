@@ -19,47 +19,71 @@ class VehicleCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Colors.black87,
-          radius: 25,
-          child: Icon(
-            Icons.directions_car,
-            color: Colors.white,
-          ),
-        ),
-        title: Row(
-          children: [
-            Text(
-              vehicle.plate,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(width: 8),
-            Badge(
-              label: Text(vehicle.isActive ? 'Activo' : 'Inactivo'),
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              backgroundColor:
-                  vehicle.isActive ? Colors.lightGreen : Colors.redAccent,
-            )
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 4),
-            AtributeRow(atribute: 'Marca', value: vehicle.brand),
-            AtributeRow(
-                atribute: 'Fabricación',
-                value: vehicle.manufactureDate.year.toString()),
-            AtributeRow(atribute: 'Costo', value: vehicle.cost.toString()),
-          ],
-        ),
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          color: Colors.grey,
-          size: 20,
-        ),
+      child: InkWell(
         onTap: () => onVehicleSelected(vehicle),
+        borderRadius: BorderRadius.circular(16),
+        child: Row(
+          children: [
+            Container(
+              height: 110,
+              width: 110,
+              decoration: const BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  bottomLeft: Radius.circular(16),
+                ),
+              ),
+              child: const Icon(
+                Icons.directions_car,
+                color: Colors.white,
+                size: 48,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      vehicle.plate,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(width: 8),
+                    Badge(
+                      label: Text(vehicle.isActive ? 'Activo' : 'Inactivo'),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      backgroundColor: vehicle.isActive
+                          ? Colors.lightGreen
+                          : Colors.redAccent,
+                    )
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 4),
+                    AtributeRow(atribute: 'Marca', value: vehicle.brand),
+                    AtributeRow(
+                        atribute: 'Fabricación',
+                        value: vehicle.manufactureDate.year.toString()),
+                    AtributeRow(
+                        atribute: 'Costo', value: vehicle.cost.toString()),
+                  ],
+                ),
+              ],
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.keyboard_arrow_right_rounded,
+              size: 32,
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
       ),
     );
   }

@@ -10,7 +10,9 @@ class VehicleListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Lista de Vehículos')),
+      appBar: AppBar(
+          title: const Text('Lista de Vehículos',
+              style: TextStyle(fontWeight: FontWeight.normal))),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final newVehicle = await Navigator.push(
@@ -24,7 +26,7 @@ class VehicleListScreen extends StatelessWidget {
             _controller.addVehicle(newVehicle);
           }
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add_rounded),
       ),
       body: ValueListenableBuilder<List<Vehicle>>(
         valueListenable: _controller.vehicles,
