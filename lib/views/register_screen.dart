@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import '../controllers/login_controller.dart';
-import 'vehicle_list/vehicle_list_screen.dart';
-import 'register_screen.dart';
+import '../controllers/register_controller.dart';
 
-class LoginScreen extends StatelessWidget {
-  final LoginController _controller = LoginController();
+
+class RegisterScreen extends StatelessWidget {
+  final RegisterController _controller = RegisterController();
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Iniciar Sesión'),
+        title: Text('Registrarse'),
         backgroundColor: Colors.blueAccent,
       ),
       body: Center(
@@ -28,9 +27,8 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Título
                   Text(
-                    'Bienvenido',
+                    'Crear cuenta',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -38,8 +36,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 20),
-
-                  // Campo de nombre
                   TextField(
                     controller: firstNameController,
                     decoration: InputDecoration(
@@ -49,14 +45,10 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    textInputAction: TextInputAction.next,
                   ),
                   SizedBox(height: 12),
-
-                  // Campo de apellido
                   TextField(
                     controller: lastNameController,
-                    obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Apellido',
                       prefixIcon: Icon(Icons.person_outline),
@@ -64,56 +56,40 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    textInputAction: TextInputAction.done,
                   ),
-                  SizedBox(height: 20),
-
-                  // Botón de ingreso
+                  SizedBox(height: 12),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                      padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50),
                     ),
                     onPressed: () {
-                      if (_controller.authenticate(
+                      bool isRegistered = _controller.registerUser(
                         firstNameController.text,
-                        lastNameController.text,
-                      )) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => VehicleListScreen()),
-                        );
-                      } 
-                      else {
+                        lastNameController.text
+                        
+                      );
+
+                      if (isRegistered) {
+                        Navigator.pop(context); // Vuelve a la pantalla anterior
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Credenciales inválidas')),
+                          SnackBar(content: Text('Usuario registrado con éxito')),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Registro fallido: Nombre ya en uso o campos vacíos')),
                         );
                       }
                     },
                     child: Text(
-                      'Ingresar',
+                      'Registrarse',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => RegisterScreen()),
-                      );
-                    },
-                    child: Text(
-                      '¿No tienes cuenta? Regístrate aquí',
-                      style: TextStyle(color: Colors.blueAccent),
                     ),
                   ),
                 ],
