@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/vehicle.dart';
+import 'package:flutter_app/views/edit_vehicle_screen.dart';
 import 'package:flutter_app/views/vehicle_list/widgets/vehicle_list_body.dart';
 import '../../controllers/vehicle_controller.dart';
 import '../add_vehicle_screen.dart';
@@ -66,6 +67,23 @@ class VehicleListScreen extends StatelessWidget {
             vehicles: vehicles,
             onVehicleSelected: (vehicle) {
               print("Vehículo seleccionado: ${vehicle.plate}");
+            },
+            onVehicleDeleted: (vehicle) {
+              _controller.removeVehicle(vehicle.plate);
+            },
+            onVehicleEdited: (vehicle) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditVehicleScreen(
+                    vehicle: vehicle,
+                    onVehicleEdited: (editedVehicle) {
+                      _controller.editVehicle(editedVehicle,
+                          vehicles.indexWhere((v) => v.plate == vehicle.plate));
+                    },
+                  ),
+                ),
+              );
             },
           );
         },

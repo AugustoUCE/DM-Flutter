@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/vehicle.dart';
+import 'package:flutter_app/views/edit_vehicle_screen.dart';
 
 class VehicleCard extends StatelessWidget {
+  final Vehicle vehicle;
+  final Function(Vehicle p1) onVehicleSelected;
+  final Function(Vehicle p1) onVehicleDeleted;
+  final Function(Vehicle p1) onVehicleEdited;
+
   const VehicleCard({
     super.key,
     required this.vehicle,
     required this.onVehicleSelected,
+    required this.onVehicleDeleted,
+    required this.onVehicleEdited,
   });
-
-  final Vehicle vehicle;
-  final Function(Vehicle p1) onVehicleSelected;
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -77,9 +81,46 @@ class VehicleCard extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            const Icon(
-              Icons.keyboard_arrow_right_rounded,
-              size: 32,
+            Column(
+              children: [
+                PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'Delete') {
+                      onVehicleDeleted(vehicle);
+                    } else if (value == 'Edit') {
+                      onVehicleEdited(vehicle);
+                    }
+                  },
+                  itemBuilder: (BuildContext context) {
+                    return [
+                      const PopupMenuItem<String>(
+                        value: 'Delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.black54),
+                            SizedBox(width: 8),
+                            Text('Eliminar'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem<String>(
+                        value: 'Edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit, color: Colors.black54),
+                            SizedBox(width: 8),
+                            Text('Editar'),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                ),
+                Icon(
+                  Icons.keyboard_arrow_right_rounded,
+                  size: 32,
+                ),
+              ],
             ),
             const SizedBox(width: 16),
           ],

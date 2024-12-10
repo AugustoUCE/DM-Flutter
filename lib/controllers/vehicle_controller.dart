@@ -36,4 +36,13 @@ class VehicleController {
   List<Vehicle> getVehicles() {
     return vehicles.value;
   }
+
+  void removeVehicle(String plate) {
+    vehicles.value = vehicles.value.where((v) => v.plate != plate).toList();
+  }
+
+  void editVehicle(Vehicle updateVehicle, int index) {
+    vehicles.value[index] = updateVehicle;
+    vehicles.notifyListeners();
+  }
 }
