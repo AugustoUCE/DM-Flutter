@@ -116,10 +116,10 @@ class VehicleCard extends StatelessWidget {
                     ];
                   },
                 ),
-                Icon(
-                  Icons.keyboard_arrow_right_rounded,
-                  size: 32,
-                ),
+                /* Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  size: 25,
+                ),*/
               ],
             ),
             const SizedBox(width: 16),
