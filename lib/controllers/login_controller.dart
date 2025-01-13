@@ -8,9 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
 class LoginController {
-  LoginController._singleton() {
-    loadJsonFromFile();
-  }
+  LoginController._singleton();
   static final LoginController _mismaInstancia = LoginController._singleton();
   factory LoginController() => _mismaInstancia;
 
@@ -60,7 +58,8 @@ class LoginController {
 
   // PARA JSON
 
-  Future<void> saveJsonToFile(String jsonString) async {
+  Future<void> saveJsonToFile() async {
+     String jsonString=jsonEncode(users.map((user) => user.toJson()).toList());
     if (Platform.isAndroid) {
       if (await _checkPermissions()) {
         try {
@@ -195,7 +194,7 @@ class LoginController {
 
   //un guardado general de los datos users
   void saveDataOnExit() {
-    saveJsonToFile(jsonEncode(users.map((user) => user.toJson()).toList()));
+    saveJsonToFile();
     saveXmlToFile();
     print('Datos guardados al salir.');
   }
