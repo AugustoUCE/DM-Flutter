@@ -1,5 +1,6 @@
 import 'package:xml/xml.dart';
 class User {
+  final int? id;
   final String firstName;
   final String lastName;
 
