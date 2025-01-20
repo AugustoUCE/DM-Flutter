@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:persistencia/controllers/database_controller.dart';
 import '../models/Vehicle.dart';
 import '../controllers/vehicle_controller.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   final VehicleController controller;
 
-  const AddVehicleScreen({super.key, required this.controller});
+  const AddVehicleScreen({
+    super.key,
+    required this.controller,
+
+  });
 
   @override
   AddVehicleScreenState createState() => AddVehicleScreenState();
@@ -130,6 +135,7 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
                     isActive: isActive,
                   );
                   Navigator.pop(context, vehicle);
+                  // DatabaseController().insertVehicle(vehicle);
                 },
                 child: const Text('Guardar'),
               ),

@@ -20,12 +20,12 @@ class RegisterController {
     if (firstName.isEmpty || lastName.isEmpty) {
       return false;
     }
-    if (_loginController.users.any((user) => user.firstName == firstName)) {
+    if (_loginController.users.value.any((user) => user.firstName == firstName)) {
       return false;
     }
     final encryptedLastName = _encryptPassword(lastName);
     _dbController.insertUser(User(firstName: firstName, lastName: encryptedLastName));
-    _loginController.users
+    _loginController.users.value
         .add(User(firstName: firstName, lastName: encryptedLastName));
 
     return true;

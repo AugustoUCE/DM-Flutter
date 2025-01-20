@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:path/path.dart';
+import 'package:persistencia/controllers/vehicle_controller.dart';
 import 'package:persistencia/models/User.dart';
 import 'package:persistencia/models/Vehicle.dart';
+import 'package:persistencia/views/vehicle_list/widgets/vehicle_card.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseController {
@@ -110,13 +112,15 @@ class DatabaseController {
     return await db.insert('vehicles', vehicle.toMap());
   }
 
-  Future<int> updateVehicle(Vehicle vehicle) async {
+  Future<int> updateVehicle(Vehicle vehicle, String plate) async {
+    print("vehicle: ${vehicle.plate}");
+
     final db = await database;
     return await db.update(
       'vehicles',
       vehicle.toMap(),
       where: 'plate = ?',
-      whereArgs: [vehicle.plate],
+      whereArgs: [plate],
     );
   }
 
@@ -172,7 +176,9 @@ class DatabaseController {
       }
     }
   }
-  Future<void> initializeDefaultVehicles(DatabaseController dbController) async {
+
+  Future<void> initializeDefaultVehicles(
+      DatabaseController dbController) async {
     final vehi = [
       Vehicle(
         plate: 'AAA-123',
@@ -208,5 +214,4 @@ class DatabaseController {
       }
     }
   }
-
 }

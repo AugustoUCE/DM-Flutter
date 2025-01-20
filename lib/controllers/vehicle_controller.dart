@@ -37,9 +37,17 @@ class VehicleController extends ChangeNotifier {
     ),
   ]);
 
+  // Hacer que loadDB() se ejecute al inicial la app
+  VehicleController() {
+    loadDB();
+  }
+
   void addVehicle(Vehicle vehicle) {
     vehicles.value = [...vehicles.value, vehicle];
     saveVehiclesToFile();
+
+    //DB
+    _databaseController.insertVehicle(vehicle);
     vehicles.notifyListeners();
   }
 
@@ -50,12 +58,20 @@ class VehicleController extends ChangeNotifier {
   void removeVehicle(String plate) {
     vehicles.value = vehicles.value.where((v) => v.plate != plate).toList();
     saveVehiclesToFile();
+
+    //DB
+    _databaseController.deleteVehicle(plate);
     vehicles.notifyListeners();
   }
 
-  void editVehicle(Vehicle updatedVehicle, int index) {
-    vehicles.value[index] = updatedVehicle;
-    saveVehiclesToFile();
+  void editVehicle(Vehicle updatedVehicle, int index, String oldPlate) {
+    // vehicles.value[index] = updatedVehicle;
+    // saveVehiclesToFile();
+    // vehicles.notifyListeners();
+
+    //DB
+    _databaseController.updateVehicle(updatedVehicle, oldPlate);
+    loadDB();
     vehicles.notifyListeners();
   }
 
@@ -122,15 +138,21 @@ class VehicleController extends ChangeNotifier {
     }
     return status.isGranted;
   }
+
   Future<void> loadDB() async {
-    final List<Vehicle> fetchedVehicles = (await _databaseController.getVehicles());
-    for (Vehicle fusr in fetchedVehicles) {
-      addVehicle(fusr);
-    }
+    vehicles.value = [];
+    final List<Vehicle> fetchedVehicles =
+        (await _databaseController.getVehicles());
+    //DB
+    vehicles.value = fetchedVehicles;
+    // for (Vehicle fusr in fetchedVehicles) {
+    //
+    // }
   }
 
   Future<void> saveDB() async {
-    final List<Vehicle> fetchedVehicles = (await _databaseController.getVehicles());
+    final List<Vehicle> fetchedVehicles =
+        (await _databaseController.getVehicles());
     for (Vehicle vehi in fetchedVehicles) {
       if (!fetchedVehicles.any((u) => u.plate == vehi.plate)) {
         await _databaseController.insertVehicle(vehi);
