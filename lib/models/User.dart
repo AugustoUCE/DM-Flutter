@@ -1,15 +1,10 @@
-import 'package:xml/xml.dart';
-import 'dart:async';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import '../models/User.dart';
-
 class User {
   final int? id;
   final String firstName;
   final String lastName;
 
-  User({required this.id, required this.firstName, required this.lastName});
+  User({this.id, required this.firstName, required this.lastName});
+
   // Convertir de un mapa (SQLite) a un objeto User
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
@@ -18,7 +13,8 @@ class User {
       lastName: map['lastName'],
     );
   }
-    // Convertir de un objeto User a un mapa (SQLite)
+
+  // Convertir de un objeto User a un mapa (SQLite)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -26,7 +22,8 @@ class User {
       'lastName': lastName,
     };
   }
-  // Método para convertir un objeto User a JSON
+
+  // Convertir a JSON (si necesitas hacerlo)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -35,8 +32,7 @@ class User {
     };
   }
 
-  // Método para convertir un JSON a un User
-
+  // Crear un objeto User desde un JSON
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
@@ -44,8 +40,4 @@ class User {
       lastName: json['lastName'],
     );
   }
-
-
-
-
 }

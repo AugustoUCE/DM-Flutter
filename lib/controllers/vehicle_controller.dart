@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 class VehicleController extends ChangeNotifier {
   ValueNotifier<List<Vehicle>> vehicles = ValueNotifier<List<Vehicle>>([
     Vehicle(
+      id: 1,
       plate: 'AAA-123',
       brand: 'Toyota',
       manufactureDate: DateTime(2020, 5, 20),
@@ -16,6 +17,7 @@ class VehicleController extends ChangeNotifier {
       isActive: true,
     ),
     Vehicle(
+      id: 2,
       plate: 'BBB-456',
       brand: 'Honda',
       manufactureDate: DateTime(2018, 11, 10),
@@ -24,6 +26,7 @@ class VehicleController extends ChangeNotifier {
       isActive: false,
     ),
     Vehicle(
+      id: 3,
       plate: 'CCC-789',
       brand: 'Ford',
       manufactureDate: DateTime(2021, 7, 15),

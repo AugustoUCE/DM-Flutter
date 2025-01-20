@@ -1,87 +1,66 @@
-import 'dart:async';
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../models/User.dart';
+import 'package:path/path.dart';
+import '../models/user.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper _instance = DatabaseHelper._internal();
-  factory DatabaseHelper() => _instance;
+  static const _databaseName = "usuarios.db";
+  static const _databaseVersion = 1;
+  static const table = 'usuarios';
+
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
   static Database? _database;
 
-  DatabaseHelper._internal();
+  DatabaseHelper._privateConstructor();
 
+  // Crear o abrir la base de datos
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  Future<Database> _initDatabase() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'app_database.db');
-
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _onCreate,
-    );
+  // Abrir la base de datos y crear la tabla
+  _initDatabase() async {
+    String path = join(await getDatabasesPath(), _databaseName);
+    return await openDatabase(path,
+        version: _databaseVersion, onCreate: _onCreate);
   }
 
-  Future<void> _onCreate(Database db, int version) async {
+  // Crear la tabla de usuarios
+  Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        firstName TEXT,
-        lastName TEXT
+      CREATE TABLE $table(
+        id INTEGER PRIMARY KEY,
+        firstName TEXT NOT NULL,
+        lastName TEXT NOT NULL
       )
     ''');
   }
 
-  // Métodos CRUD
+  // Insertar un usuario
   Future<int> insertUser(User user) async {
-    final db = await database;
-    return await db.insert('users', user.toMap());
+    Database db = await database;
+    return await db.insert(table, user.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<User?> getUser(int id) async {
-    final db = await database;
-    final maps = await db.query(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
-
-    if (maps.isNotEmpty) {
-      return User.fromMap(maps.first);
-    }
-    return null;
-  }
-
+  // Obtener todos los usuarios
   Future<List<User>> getUsers() async {
-    final db = await database;
-    final maps = await db.query('users');
-
-    return List.generate(maps.length, (i) {
-      return User.fromMap(maps[i]);
-    });
+    Database db = await database;
+    var result = await db.query(table);
+    return result.isNotEmpty ? result.map((c) => User.fromMap(c)).toList() : [];
   }
 
+  // Actualizar un usuario
   Future<int> updateUser(User user) async {
-    final db = await database;
-    return await db.update(
-      'users',
-      user.toMap(),
-      where: 'id = ?',
-      whereArgs: [user.id],
-    );
+    Database db = await database;
+    return await db
+        .update(table, user.toMap(), where: 'id = ?', whereArgs: [user.id]);
   }
 
+  // Eliminar un usuario
   Future<int> deleteUser(int id) async {
-    final db = await database;
-    return await db.delete(
-      'users',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    Database db = await database;
+    return await db.delete(table, where: 'id = ?', whereArgs: [id]);
   }
 }

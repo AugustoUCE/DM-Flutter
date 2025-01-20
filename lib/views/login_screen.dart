@@ -80,8 +80,8 @@ class LoginScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 15, horizontal: 50),
                     ),
-                    onPressed: () {
-                      if (_controller.authenticate(
+                    onPressed: () async {
+                      if (await _controller.loginUser(
                         firstNameController.text,
                         lastNameController.text,
                       )) {

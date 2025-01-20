@@ -122,6 +122,7 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
                   final plate =
                       '${letterController.text}-${numberController.text}';
                   final vehicle = Vehicle(
+                    id: null,
                     plate: plate,
                     brand: brandController.text,
                     manufactureDate: selectedDate!,
