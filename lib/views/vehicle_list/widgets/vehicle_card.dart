@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:persistencia/models/vehicle.dart';
+import 'package:persistencia/models/Vehicle.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle vehicle;

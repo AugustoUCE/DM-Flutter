@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistencia/controllers/database_controller.dart';
 import '../controllers/login_controller.dart';
 import 'vehicle_list/vehicle_list_screen.dart';
 import 'register_screen.dart';
@@ -12,6 +13,11 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dbController = DatabaseController();
+    WidgetsFlutterBinding.ensureInitialized();
+    dbController.initializeDefaultUsers();
+    dbController.initializeDefaultVehicles(dbController);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Iniciar Sesión'),
@@ -80,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           vertical: 15, horizontal: 50),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_controller.authenticate(
                         firstNameController.text,
                         lastNameController.text,

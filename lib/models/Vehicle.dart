@@ -41,4 +41,14 @@ class Vehicle {
       'isActive': isActive,
     };
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'plate': plate,
+      'brand': brand,
+      'manufactureDate': manufactureDate.toIso8601String(),
+      'color': color,
+      'cost': cost,
+      'isActive': isActive,
+    };
+  }
 }

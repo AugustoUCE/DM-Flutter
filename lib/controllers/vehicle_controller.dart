@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
-import '../models/vehicle.dart';
+import 'package:persistencia/models/Vehicle.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'database_controller.dart';
+
 class VehicleController extends ChangeNotifier {
+  static final DatabaseController _databaseController = DatabaseController();
+
   ValueNotifier<List<Vehicle>> vehicles = ValueNotifier<List<Vehicle>>([
     Vehicle(
       plate: 'AAA-123',
@@ -118,8 +122,24 @@ class VehicleController extends ChangeNotifier {
     }
     return status.isGranted;
   }
+  Future<void> loadDB() async {
+    final List<Vehicle> fetchedVehicles = (await _databaseController.getVehicles());
+    for (Vehicle fusr in fetchedVehicles) {
+      addVehicle(fusr);
+    }
+  }
+
+  Future<void> saveDB() async {
+    final List<Vehicle> fetchedVehicles = (await _databaseController.getVehicles());
+    for (Vehicle vehi in fetchedVehicles) {
+      if (!fetchedVehicles.any((u) => u.plate == vehi.plate)) {
+        await _databaseController.insertVehicle(vehi);
+      }
+    }
+  }
 
   void saveDataOnExit() {
+    saveDB();
     saveVehiclesToFile();
     print('Datos guardados al salir.');
   }

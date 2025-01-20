@@ -1,15 +1,20 @@
-import 'package:xml/xml.dart';
-
-import '../models/user.dart';
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:crypto/crypto.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'dart:io';
+import 'package:persistencia/controllers/database_controller.dart';
+import 'package:xml/xml.dart';
+
+import '../models/User.dart';
 
 class LoginController {
   LoginController._singleton();
+
   static final LoginController _mismaInstancia = LoginController._singleton();
+  static final DatabaseController _databaseController = DatabaseController();
+
   factory LoginController() => _mismaInstancia;
 
   final List<User> users = [
@@ -32,12 +37,12 @@ class LoginController {
   ];
 
   // Método para autenticar usando nombre y apellido
+  // Future<bool>
   bool authenticate(String firstName, String lastName) {
     // Encriptar el apellido ingresado para comparación
     final encryptedInputLastName = _encryptLastName(lastName);
-
-    //printUsers(); // Verificacion del usuario con el nombre y el apellido encriptado
-
+    // printUsers(); // Verificacion del usuario con el nombre y el apellido encriptado
+    // print(encryptedInputLastName);
     return users.any((user) =>
         user.firstName == firstName && user.lastName == encryptedInputLastName);
   }
@@ -59,7 +64,7 @@ class LoginController {
   // PARA JSON
 
   Future<void> saveJsonToFile() async {
-     String jsonString=jsonEncode(users.map((user) => user.toJson()).toList());
+    String jsonString = jsonEncode(users.map((user) => user.toJson()).toList());
     if (Platform.isAndroid) {
       if (await _checkPermissions()) {
         try {
@@ -86,6 +91,22 @@ class LoginController {
       }
     } else {
       print('Plataforma no soportada');
+    }
+  }
+
+  Future<void> loadDB() async {
+    final fetchedUsers = await _databaseController.getUsers();
+    for (var fusr in fetchedUsers) {
+      users.add(fusr);
+    }
+  }
+
+  Future<void> saveDB() async {
+    final existingUsers = await _databaseController.getUsers();
+    for (var user in users) {
+      if (!existingUsers.any((u) => u.firstName == user.firstName)) {
+        await _databaseController.insertUser(user);
+      }
     }
   }
 
@@ -194,6 +215,7 @@ class LoginController {
 
   //un guardado general de los datos users
   void saveDataOnExit() {
+    saveDB();
     saveJsonToFile();
     saveXmlToFile();
     print('Datos guardados al salir.');

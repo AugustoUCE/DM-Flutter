@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/vehicle.dart';
+import '../models/Vehicle.dart';
 import '../controllers/vehicle_controller.dart';
 
 class AddVehicleScreen extends StatefulWidget {

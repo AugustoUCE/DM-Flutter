@@ -1,11 +1,14 @@
-
-import 'package:persistencia/controllers/login_controller.dart';
-import '../models/user.dart';
 import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
+import 'package:persistencia/controllers/database_controller.dart';
+import 'package:persistencia/controllers/login_controller.dart';
+
+import '../models/User.dart';
+
 class RegisterController {
   final LoginController _loginController = LoginController();
-
+  final DatabaseController _dbController = DatabaseController();
  
   String _encryptPassword(String lastName) {
     final bytes = utf8.encode(lastName);
@@ -13,28 +16,18 @@ class RegisterController {
     return digest.toString();
   }
 
-  
   bool registerUser(String firstName, String lastName) {
-    
     if (firstName.isEmpty || lastName.isEmpty) {
       return false;
     }
-
-    
     if (_loginController.users.any((user) => user.firstName == firstName)) {
       return false;
     }
-
-    
     final encryptedLastName = _encryptPassword(lastName);
+    _dbController.insertUser(User(firstName: firstName, lastName: encryptedLastName));
     _loginController.users
         .add(User(firstName: firstName, lastName: encryptedLastName));
-    
+
     return true;
-
-    
-    
   }
-
- 
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:persistencia/models/vehicle.dart';
+import 'package:persistencia/models/Vehicle.dart';
 import 'package:persistencia/views/edit_vehicle_screen.dart';
 import 'package:persistencia/views/vehicle_list/widgets/vehicle_card.dart';
 import '../../controllers/vehicle_controller.dart';
@@ -110,7 +110,7 @@ class VehicleListScreenState extends State<VehicleListScreen> {
                 final vehicle = vehicles[index - 1];
                 return VehicleCard(
                   key: ValueKey(vehicle.plate),
-                  vehicle: vehicle,
+                  vehicle: vehicle ,
                   onVehicleSelected: (vehicle) {
                     // TODO
                   },
@@ -125,7 +125,7 @@ class VehicleListScreenState extends State<VehicleListScreen> {
                           vehicle: vehicle,
                           onVehicleEdited: (editedVehicle) {
                             _controller.editVehicle(
-                                editedVehicle,
+                                editedVehicle as Vehicle,
                                 vehicles.indexWhere(
                                     (v) => v.plate == vehicle.plate));
                           },
