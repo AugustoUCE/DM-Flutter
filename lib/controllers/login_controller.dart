@@ -12,9 +12,43 @@ class LoginController {
   LoginController._singleton();
   static final LoginController _mismaInstancia = LoginController._singleton();
   factory LoginController() => _mismaInstancia;
-
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
+  Future<List<User>> getUsers() async {
+    try {
+      List<User> users = await _dbHelper.getUsers();
+      return users;
+    } catch (e) {
+      print('Error al obtener usuarios: $e');
+      return [];
+    }
+  }
+
+  Future<void> addUser(String firstName, String lastName) async {
+    try {
+      User newUser = User(id: null, firstName: firstName, lastName: lastName);
+      await _dbHelper.insertUser(newUser);
+      print('Usuario agregado exitosamente');
+    } catch (e) {
+      print('Error al agregar usuario: $e');
+    }
+  }
+
+  Future<void> updateUser(int id, String firstName, String lastName) async {
+    try {
+      User updatedUser = User(id: id, firstName: firstName, lastName: lastName);
+      await _dbHelper.updateUser(updatedUser);
+      print('Usuario actualizado exitosamente');
+    } catch (e) {
+      print('Error al actualizar usuario: $e');
+    }
+  }
+ 
+  }
+
+ 
+
+//
   Future<void> saveJsonToFile() async {
     List<User> users = await _dbHelper.getUsers();
     String jsonString = jsonEncode(users.map((user) => user.toJson()).toList());
@@ -87,6 +121,5 @@ class LoginController {
       status = await Permission.storage.request();
     }
     return status.isGranted;
-    
   }
 }
