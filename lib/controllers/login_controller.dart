@@ -5,6 +5,7 @@ import 'package:flutter/services.dart'; // Para usar Platform
 import 'package:permission_handler/permission_handler.dart';
 import '../models/user.dart';
 import '../database/database_helper.dart';
+import 'package:crypto/crypto.dart';
 
 class LoginController {
   LoginController._singleton();
@@ -37,9 +38,17 @@ class LoginController {
   // Verificar si el usuario existe en la base de datos (login)
   Future<bool> loginUser(String firstName, String lastName) async {
     try {
+      // Encriptar el apellido ingresado
+      final encryptedLastName =
+          sha512.convert(utf8.encode(lastName)).toString();
+
+      // Obtener todos los usuarios
       List<User> users = await _dbHelper.getUsers();
+
+      // Verificar las credenciales
       for (User user in users) {
-        if (user.firstName == firstName && user.lastName == lastName) {
+        print('Comparando con usuario: ${user.toJson()}');
+        if (user.firstName == firstName && user.lastName == encryptedLastName) {
           print('Inicio de sesión exitoso');
           return true;
         }
@@ -57,7 +66,7 @@ class LoginController {
     try {
       User newUser = User(id: null, firstName: firstName, lastName: lastName);
       await _dbHelper.insertUser(newUser);
-      print('Usuario registrado exitosamente');
+      print('Usuario registrado exitosamente: ${newUser.toJson()}');
     } catch (e) {
       print('Error al registrar usuario: $e');
     }
@@ -84,7 +93,8 @@ class LoginController {
     try {
       // Obtener los usuarios de la base de datos
       List<User> users = await getUsers();
-      String jsonString = jsonEncode(users.map((user) => user.toJson()).toList());
+      String jsonString =
+          jsonEncode(users.map((user) => user.toJson()).toList());
 
       if (Platform.isAndroid) {
         if (await _checkPermissions()) {
@@ -130,7 +140,8 @@ class LoginController {
           final jsonString = await file.readAsString();
           final List<dynamic> jsonList = jsonDecode(jsonString);
           // Limpiar la base de datos actual y cargar los datos desde el archivo
-          List<User> loadedUsers = jsonList.map((json) => User.fromJson(json)).toList();
+          List<User> loadedUsers =
+              jsonList.map((json) => User.fromJson(json)).toList();
           // Aquí puedes hacer lo que necesites con los usuarios cargados, por ejemplo, guardarlos en la base de datos.
           print('Datos cargados exitosamente desde el archivo.');
         } else {
