@@ -9,10 +9,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'database_controller.dart';
 
 class VehicleController extends ChangeNotifier {
-  
   VehicleController._singleton();
 
-  static final VehicleController _mismaInstancia = VehicleController._singleton();
+  static final VehicleController _mismaInstancia =
+      VehicleController._singleton();
   static final DatabaseController _databaseController = DatabaseController();
 
   factory VehicleController() => _mismaInstancia;
@@ -178,7 +178,31 @@ class VehicleController extends ChangeNotifier {
     print('JSON de vehículos: $jsonString');
   }
 
-  Future<String?> capturePhoto(Vehicle vehicle) async {
+  Future<String?> capturePhotoAndSave(Vehicle vehicle) async {
+    try {
+      // Captura la foto y guarda la ruta
+      String? savedPath = await capturePhoto();
+
+      if (savedPath != null) {
+        // Asigna la ruta a vehicle.imagePath solo después de copiar exitosamente.
+        vehicle.imagePath = savedPath;
+
+        // Guarda los cambios.
+        saveVehiclesToFile();
+        // Guardar en la DB
+        _databaseController.updateVehicle(vehicle, vehicle.plate);
+        vehicles.notifyListeners();
+        return savedPath;
+      }
+    } catch (e) {
+      // Manejo de errores en caso de fallo.
+      print('Error al guardar la foto: $e');
+    }
+
+    return null; // Retorna null si no se capturó una foto.
+  }
+
+  Future<String?> capturePhoto() async {
     final picker = ImagePicker();
     final XFile? photo = await picker.pickImage(source: ImageSource.camera);
 
@@ -198,12 +222,6 @@ class VehicleController extends ChangeNotifier {
         // Copia el archivo al nuevo destino.
         await file.copy(savedPath);
 
-        // Asigna la ruta a vehicle.imagePath solo después de copiar exitosamente.
-        vehicle.imagePath = savedPath;
-
-        // Guarda los cambios.
-        saveVehiclesToFile();
-        vehicles.notifyListeners();
         return savedPath;
       } catch (e) {
         // Manejo de errores en caso de fallo.
@@ -214,4 +232,43 @@ class VehicleController extends ChangeNotifier {
 
     return null; // Retorna null si no se capturó una foto.
   }
+
+// Future<String?> capturePhoto() async {
+//   final picker = ImagePicker();
+//   final XFile? photo = await picker.pickImage(source: ImageSource.camera);
+//
+//   if (photo != null) {
+//     try {
+//       final directory = Directory('/storage/emulated/0/Download');
+//
+//       // Crea el directorio si no existe.
+//       if (!directory.existsSync()) {
+//         directory.createSync(recursive: true);
+//       }
+//
+//       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
+//       final savedPath = '${directory.path}/$fileName';
+//       final file = File(photo.path);
+//
+//       // Copia el archivo al nuevo destino.
+//       await file.copy(savedPath);
+//
+//       // // Asigna la ruta a vehicle.imagePath solo después de copiar exitosamente.
+//       // vehicle.imagePath = savedPath;
+//       //
+//       // // Guarda los cambios.
+//       // saveVehiclesToFile();
+//       // // Guardar en la DB
+//       // _databaseController.updateVehicle(vehicle, vehicle.plate);
+//       // vehicles.notifyListeners();
+//       return savedPath;
+//     } catch (e) {
+//       // Manejo de errores en caso de fallo.
+//       print('Error al guardar la foto: $e');
+//       return null;
+//     }
+//   }
+//
+//   return null; // Retorna null si no se capturó una foto.
+// }
 }

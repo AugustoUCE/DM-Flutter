@@ -10,6 +10,7 @@ class Vehicle {
   double cost;
 
   bool isActive;
+
   String? imagePath;
   
   
@@ -57,6 +58,7 @@ class Vehicle {
       'color': color,
       'cost': cost,
       'isActive': isActive,
+      'imagePath': imagePath,
     };
   }
 }

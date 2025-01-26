@@ -29,7 +29,7 @@ class DatabaseController {
 
     return openDatabase(
       path,
-      version: 1,
+      version: 2, // Increment the version number
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE users (
@@ -47,9 +47,15 @@ class DatabaseController {
             manufactureDate TEXT NOT NULL,
             color TEXT NOT NULL,
             cost REAL NOT NULL,
-            isActive INTEGER NOT NULL
+            isActive INTEGER NOT NULL,
+            imagePath TEXT
           );
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('ALTER TABLE vehicles ADD COLUMN imagePath TEXT');
+        }
       },
     );
   }

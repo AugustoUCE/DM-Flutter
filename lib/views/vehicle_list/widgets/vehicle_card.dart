@@ -40,7 +40,7 @@ class VehicleCard extends StatelessWidget {
                   bottomLeft: Radius.circular(16),
                 ),
               ),
-              child: vehicle.imagePath != null
+              child: vehicle.imagePath != null && File(vehicle.imagePath!).existsSync()
                   ? ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(16),
@@ -103,7 +103,7 @@ class VehicleCard extends StatelessWidget {
                     } else if (value == 'Edit') {
                       onVehicleEdited(vehicle);
                     } else if (value == 'capture') {
-                      VehicleController().capturePhoto(vehicle);
+                      VehicleController().capturePhotoAndSave(vehicle);
                     }
                   },
                   itemBuilder: (BuildContext context) {

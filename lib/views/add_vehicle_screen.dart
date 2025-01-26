@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:persistencia/controllers/database_controller.dart';
 import '../models/Vehicle.dart';
@@ -9,7 +11,6 @@ class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({
     super.key,
     required this.controller,
-
   });
 
   @override
@@ -25,6 +26,7 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
   String selectedColor = 'Blanco';
   bool isActive = false;
   DateTime? selectedDate;
+  String? imagePath;
 
   Future<void> _pickDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -52,6 +54,35 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              GestureDetector(
+                onTap: () async {
+                  String? path = await VehicleController().capturePhoto();
+                  setState(() {
+                    imagePath = path;
+                  });
+                },
+                child: Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: imagePath != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.file(
+                            File(imagePath!),
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : const Icon(
+                          Icons.camera_alt,
+                          size: 48,
+                          color: Colors.grey,
+                        ),
+                ),
+              ),
               Row(
                 children: [
                   Expanded(
@@ -133,6 +164,7 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
                     color: selectedColor,
                     cost: double.parse(costController.text),
                     isActive: isActive,
+                    imagePath: imagePath,
                   );
                   Navigator.pop(context, vehicle);
                   // DatabaseController().insertVehicle(vehicle);
