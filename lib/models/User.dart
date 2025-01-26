@@ -39,4 +39,10 @@ class User {
     final lastName = xmlElement.findElements('lastName').first.text;
     return User(firstName: firstName, lastName: lastName);
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'firstName': firstName,
+      'lastName': lastName,
+    };
+  }
 }

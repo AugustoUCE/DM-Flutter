@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:persistencia/models/vehicle.dart';
+import 'package:persistencia/controllers/vehicle_controller.dart';
+import 'package:persistencia/models/Vehicle.dart';
 
 class VehicleCard extends StatelessWidget {
   final Vehicle vehicle;
@@ -37,11 +40,22 @@ class VehicleCard extends StatelessWidget {
                   bottomLeft: Radius.circular(16),
                 ),
               ),
-              child: const Icon(
-                Icons.directions_car,
-                color: Colors.white,
-                size: 48,
-              ),
+              child: vehicle.imagePath != null
+                  ? ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        bottomLeft: Radius.circular(16),
+                      ),
+                      child: Image.file(
+                        File(vehicle.imagePath!),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.directions_car,
+                      color: Colors.white,
+                      size: 48,
+                    ),
             ),
             const SizedBox(width: 16),
             Column(
@@ -88,6 +102,8 @@ class VehicleCard extends StatelessWidget {
                       onVehicleDeleted(vehicle);
                     } else if (value == 'Edit') {
                       onVehicleEdited(vehicle);
+                    } else if (value == 'capture') {
+                      VehicleController().capturePhoto(vehicle);
                     }
                   },
                   itemBuilder: (BuildContext context) {
@@ -112,6 +128,17 @@ class VehicleCard extends StatelessWidget {
                           ],
                         ),
                       ),
+                       const PopupMenuItem<String>(
+                        value: 'capture',
+                        child: Row(
+                          children: [
+                            Icon(Icons.image, color: Colors.black54),
+                            SizedBox(width: 8),
+                            Text('Capturar foto'),
+                          ],
+                        ),
+                      ),
+                     
                     ];
                   },
                 ),

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:persistencia/models/vehicle.dart';
+import 'package:persistencia/models/Vehicle.dart';
 import 'package:persistencia/views/edit_vehicle_screen.dart';
+
+import 'package:persistencia/views/user_table_creen.dart';
+
 import 'package:persistencia/views/vehicle_list/widgets/vehicle_card.dart';
+import 'package:persistencia/views/vehicle_table_screen.dart';
 import '../../controllers/vehicle_controller.dart';
 import '../add_vehicle_screen.dart';
 import 'package:persistencia/views/login_screen.dart';
@@ -15,6 +19,7 @@ class VehicleListScreen extends StatefulWidget {
 
 class VehicleListScreenState extends State<VehicleListScreen> {
   final VehicleController _controller = VehicleController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,24 @@ class VehicleListScreenState extends State<VehicleListScreen> {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => VehicleTableScreen()),
+              );
+            },
+            icon: const Icon(Icons.table_chart),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => UserTableScreen()),
+              );
+            },
+            icon: const Icon(Icons.table_chart_outlined),
+          ),
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'logout') {
@@ -63,7 +86,8 @@ class VehicleListScreenState extends State<VehicleListScreen> {
                 ),
               ];
             },
-          ),
+          )
+
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -125,9 +149,10 @@ class VehicleListScreenState extends State<VehicleListScreen> {
                           vehicle: vehicle,
                           onVehicleEdited: (editedVehicle) {
                             _controller.editVehicle(
-                                editedVehicle,
+                                editedVehicle as Vehicle,
                                 vehicles.indexWhere(
-                                    (v) => v.plate == vehicle.plate));
+                                    (v) => v.plate == vehicle.plate),
+                                vehicle.plate);
                           },
                         ),
                       ),

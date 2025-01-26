@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/vehicle.dart';
+import '../models/Vehicle.dart';
 
 class EditVehicleScreen extends StatefulWidget {
   final Vehicle vehicle;
