@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
-        android:label="persistencia"
+        android:label="ReservCar"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
