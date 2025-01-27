@@ -136,7 +136,7 @@ class VehicleListScreenState extends State<VehicleListScreen> {
                   key: ValueKey(vehicle.plate),
                   vehicle: vehicle,
                   onVehicleSelected: (vehicle) {
-                    // TODO
+                    
                   },
                   onVehicleDeleted: (vehicle) {
                     _controller.removeVehicle(vehicle.plate);
@@ -149,7 +149,7 @@ class VehicleListScreenState extends State<VehicleListScreen> {
                           vehicle: vehicle,
                           onVehicleEdited: (editedVehicle) {
                             _controller.editVehicle(
-                                editedVehicle as Vehicle,
+                                editedVehicle,
                                 vehicles.indexWhere(
                                     (v) => v.plate == vehicle.plate),
                                 vehicle.plate);

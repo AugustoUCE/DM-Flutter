@@ -57,7 +57,7 @@ class _VehicleTableScreenState extends State<VehicleTableScreen> {
   }
 
   Future<void> _editVehicle(Vehicle vehicle) async {
-    final editedVehicle = await Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EditVehicleScreen(

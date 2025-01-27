@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/Vehicle.dart';
 
 class EditVehicleScreen extends StatefulWidget {
@@ -24,7 +27,7 @@ class EditVehicleScreenState extends State<EditVehicleScreen> {
   late String selectedColor;
   late bool isActive;
   DateTime? selectedDate;
-
+  String? imageUrl;
   @override
   void initState() {
     super.initState();
@@ -41,6 +44,42 @@ class EditVehicleScreenState extends State<EditVehicleScreen> {
     selectedColor = widget.vehicle.color;
     isActive = widget.vehicle.isActive;
     selectedDate = widget.vehicle.manufactureDate;
+    imageUrl = widget.vehicle.imagePath;
+  }
+
+   Future<void> _showImageSourceSelection() async {
+    final picker = ImagePicker();
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Capturar Foto'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Seleccionar de la Galería'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source != null) {
+      final pickedFile = await picker.pickImage(source: source);
+      if (pickedFile != null) {
+        setState(() {
+          imageUrl = pickedFile.path; // Actualiza la URL con la nueva imagen
+        });
+      }
+    }
   }
 
   Future<void> _pickDate(BuildContext context) async {
@@ -69,6 +108,18 @@ class EditVehicleScreenState extends State<EditVehicleScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+               GestureDetector(
+                onTap: _showImageSourceSelection,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: imageUrl != null
+                      ? FileImage(File(imageUrl!))
+                      : AssetImage('assets/default_image.png') as ImageProvider,
+                  child: imageUrl == null
+                      ? const Icon(Icons.add_a_photo, size: 50)
+                      : null,
+                ),
+              ),
               Row(
                 children: [
                   Expanded(
@@ -150,6 +201,7 @@ class EditVehicleScreenState extends State<EditVehicleScreen> {
                     color: selectedColor,
                     cost: double.parse(costController.text),
                     isActive: isActive,
+                    imagePath: imageUrl,
                   );
                   print(vehicle.toString());
                   widget.onVehicleEdited(vehicle);

@@ -77,11 +77,6 @@ class LoginController {
   //   }
   // }
 
-  String _encryptLastName(String lastName) {
-    final bytes = utf8.encode(lastName);
-    final digest = sha512.convert(bytes);
-    return digest.toString();
-  }
 
   //ver si se modifica la lista
   void printUsers() {

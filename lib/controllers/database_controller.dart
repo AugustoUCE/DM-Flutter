@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:path/path.dart';
-import 'package:persistencia/controllers/vehicle_controller.dart';
+
 import 'package:persistencia/models/User.dart';
 import 'package:persistencia/models/Vehicle.dart';
-import 'package:persistencia/views/vehicle_list/widgets/vehicle_card.dart';
+
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseController {

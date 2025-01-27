@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:persistencia/controllers/database_controller.dart';
+import 'package:image_picker/image_picker.dart';
 import '../models/Vehicle.dart';
 import '../controllers/vehicle_controller.dart';
 
@@ -26,7 +26,7 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
   String selectedColor = 'Blanco';
   bool isActive = false;
   DateTime? selectedDate;
-  String? imagePath;
+  String? imageUrl;
 
   Future<void> _pickDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
@@ -44,6 +44,40 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
       });
     }
   }
+    Future<void> _showImageSourceSelection() async {
+    final picker = ImagePicker();
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Capturar Foto'),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Seleccionar de la Galería'),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (source != null) {
+      final pickedFile = await picker.pickImage(source: source);
+      if (pickedFile != null) {
+        setState(() {
+          imageUrl = pickedFile.path; // Actualiza la URL con la nueva imagen
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,33 +88,16 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              GestureDetector(
-                onTap: () async {
-                  String? path = await VehicleController().capturePhoto();
-                  setState(() {
-                    imagePath = path;
-                  });
-                },
-                child: Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: imagePath != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Image.file(
-                            File(imagePath!),
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : const Icon(
-                          Icons.camera_alt,
-                          size: 48,
-                          color: Colors.grey,
-                        ),
+           GestureDetector(
+                onTap: _showImageSourceSelection,
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: imageUrl != null
+                      ? FileImage(File(imageUrl!))
+                      : AssetImage('assets/default_image.png') as ImageProvider,
+                  child: imageUrl == null
+                      ? const Icon(Icons.add_a_photo, size: 50)
+                      : null,
                 ),
               ),
               Row(
@@ -164,7 +181,7 @@ class AddVehicleScreenState extends State<AddVehicleScreen> {
                     color: selectedColor,
                     cost: double.parse(costController.text),
                     isActive: isActive,
-                    imagePath: imagePath,
+                    imagePath: imageUrl,
                   );
                   Navigator.pop(context, vehicle);
                   // DatabaseController().insertVehicle(vehicle);

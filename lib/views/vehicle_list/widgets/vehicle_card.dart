@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+
 import 'package:persistencia/controllers/vehicle_controller.dart';
 import 'package:persistencia/models/Vehicle.dart';
 
@@ -17,6 +18,7 @@ class VehicleCard extends StatelessWidget {
     required this.onVehicleDeleted,
     required this.onVehicleEdited,
   });
+  
   @override
   Widget build(BuildContext context) {
     return Card(

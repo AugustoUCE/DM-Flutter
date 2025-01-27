@@ -69,13 +69,13 @@ class VehicleController extends ChangeNotifier {
   }
 
   void editVehicle(Vehicle updatedVehicle, int index, String oldPlate) {
-    // vehicles.value[index] = updatedVehicle;
-    // saveVehiclesToFile();
+    vehicles.value[index] = updatedVehicle;
+     saveVehiclesToFile();
     // vehicles.notifyListeners();
 
     //DB
     _databaseController.updateVehicle(updatedVehicle, oldPlate);
-    loadDB();
+    //loadDB();
     vehicles.notifyListeners();
   }
 
