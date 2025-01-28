@@ -304,6 +304,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
+  light_sensor:
+    dependency: "direct main"
+    description:
+      name: light_sensor
+      sha256: "84cdab036e87f1e7310bc0f1c30bb3ce661b581c8695fb9d5a4af32c8b0c2c2b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   lints:
     dependency: transitive
     description:

@@ -18,6 +18,9 @@ dependencies:
   sqflite: ^2.4.1
   path: ^1.8.3
   image_picker: ^1.1.2
+  light_sensor: ^3.0.1
+
+
 
 dev_dependencies:
   flutter_test:
@@ -28,11 +31,14 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/logoapp.png
+    - assets/icono_carga.png
 
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/logoapp.png"
-  icon_size: 200
+  image_path: "assets/icono_app.png"
+
+
+
+  
    
